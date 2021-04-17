@@ -1,0 +1,13 @@
+# dataset_path: "D:/Desktop/毕业设计/数据集/papers-2017-10-30/papers-2017-10-30.json"
+dataset_path: ./dataset.txt
+
+# 从数据库中选取多少个文档构建训练集
+dataset_paper_cnt: 10000
+
+negative_samples_per_pair: 5
+
+# 模型超参数
+batch_size: 16
+lr: 0.001
+K: 5
+vocab_size: 10_000_000
