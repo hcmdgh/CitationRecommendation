@@ -1,13 +1,21 @@
-# dataset_path: "D:/Desktop/毕业设计/数据集/papers-2017-10-30/papers-2017-10-30.json"
-dataset_path: ./dataset.txt
+dataset_path: ./data/dataset.txt
+dataset_pkl_path: ./data/dataset.pkl
+
+# 数据库的总计条目数
+corpus_size: 20314045
 
 # 从数据库中选取多少个文档构建训练集
-dataset_paper_cnt: 10000
+dataset_paper_cnt: 5000
 
 negative_samples_per_pair: 5
+max_token_len: 512
+use_db_cache: false
 
 # 模型超参数
-batch_size: 16
+epoch: 30
+batch_size: 1
 lr: 0.001
 K: 5
 vocab_size: 10_000_000
+alpha: 0.3
+L2_penalty: 1e-5
