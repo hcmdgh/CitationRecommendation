@@ -63,6 +63,7 @@ def main():
 
     model.train()
     for epoch in range(config.epoch):
+        total_loss = 0.
         for step, batch in enumerate(train_loader):
             doc_embed = model(batch.doc_title, batch.doc_abstract)
             pos_embed = model(batch.pos_title, batch.pos_abstract)
@@ -79,7 +80,12 @@ def main():
             loss.backward()
             optimizer.step()
 
-            print(f"step: {step} loss: {float(loss)}")
+            if step % 20 == 0:
+                print(f"epoch: {epoch} step: {step} loss: {float(loss)}")
+            total_loss += float(loss)
+
+        avg_loss = total_loss / len(train_loader)
+        print(f"epoch: {epoch} avg_loss: {avg_loss}")
 
 
 if __name__ == '__main__':
