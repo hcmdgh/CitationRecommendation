@@ -67,6 +67,23 @@ def loss_fn(y_true, y_pred):
     return torch.mean(batch_loss)
 
 
+def test(model, test_loader):
+    model.eval()
+    correct = total = 0
+    with torch.no_grad():
+        for batch in test_loader:
+            y_pred = model(batch)
+            y_true = to_gpu(batch.target)
+            for i1, i2 in zip(y_true, y_pred):
+                if i1 > 0.5 and i2 > 0.5:
+                    correct += 1
+                elif i1 < 0.5 and i2 < 0.5:
+                    correct += 1
+                total += 1
+    model.train()
+    return correct, total
+
+
 def main():
     train_loader, test_loader = dataset.get_dataloaders()
     print("batch per epoch:", len(train_loader))
@@ -90,8 +107,10 @@ def main():
             loss.backward()
             optimizer.step()
 
-            if step % 20 == 0:
+            if step % 50 == 0:
                 print(f"epoch: {epoch} step: {step} loss: {float(loss)}")
+                correct, total = test(model, test_loader)
+                print(f"test acc: {correct / total}")
             total_loss += float(loss)
 
         avg_loss = total_loss / len(train_loader)
