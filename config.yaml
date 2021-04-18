@@ -11,7 +11,7 @@ seed: 1234
 
 # 模型超参数
 epoch: 50
-batch_size: 4
+batch_size: 10
 bert_hidden_size: 84
 lr: 0.001
 K: 5
