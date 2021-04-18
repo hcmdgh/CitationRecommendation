@@ -1,13 +1,9 @@
-dataset_path: ./data/dataset.txt
-dataset_pkl_path: ./data/dataset.pkl
+dataset_path: ./data/dataset.pkl
+lookup_table_path: ./data/lookup_table.pkl
 
 # 数据库的总计条目数
 corpus_size: 20314045
 
-# 从数据库中选取多少个文档构建训练集
-dataset_paper_cnt: 5000
-
-negative_samples_per_pair: 5
 max_token_len: 512
 use_db_cache: false
 

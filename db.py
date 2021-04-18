@@ -34,7 +34,7 @@ def query_by_i(i):
 def random_sample(cnt, use_tqdm=False):
     papers = []
     visited = set()
-    for _ in tqdm(range(cnt)) if use_tqdm else range(cnt):
+    for _ in tqdm(range(cnt), desc="sampling") if use_tqdm else range(cnt):
         while True:
             i = random.randrange(config.corpus_size)
             if i not in visited:
