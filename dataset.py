@@ -5,98 +5,56 @@ from collections import namedtuple
 import torch
 import torch.utils.data
 import pickle
-
-Sample = namedtuple("Sample", "query_i, other_i, is_pos")
-RichSample = namedtuple("RichSample", "query_doc, other_doc, is_pos")
-Paper = namedtuple("Paper", "i, title, abstract, venue, keywords, in_cnt, out_cnt")
+import random
+from bean import *
 
 
 class MyDataset(torch.utils.data.Dataset):
-    def __init__(self):
-        with open(config.dataset_path, "rb") as fp:
-            self.dataset_list = pickle.load(fp)
-        with open(config.lookup_table_path, "rb") as fp:
-            self.lookup_table = pickle.load(fp)
+    def __init__(self, dataset_list, lookup_table):
+        self.dataset_list = dataset_list
+        self.lookup_table = lookup_table
 
     def __getitem__(self, index: int):
         sample = self.dataset_list[index]
+        query_doc = self.lookup_table[sample.query_i]
+        other_doc = self.lookup_table[sample.other_i]
         return RichSample(
-            query_doc=self.lookup_table[sample.query_i],
-            other_doc=self.lookup_table[sample.other_i],
-            is_pos=sample.is_pos,
+            query_title=query_doc.title,
+            query_abstract=query_doc.abstract,
+            query_venue=query_doc.venue,
+            query_keywords=' '.join(query_doc.keywords),
+            query_in_cnt=query_doc.in_cnt,
+            other_title=other_doc.title,
+            other_abstract=other_doc.abstract,
+            other_venue=other_doc.venue,
+            other_keywords=' '.join(other_doc.keywords),
+            other_in_cnt=other_doc.in_cnt,
+            target=float(sample.is_pos),
         )
 
     def __len__(self):
         return len(self.dataset_list)
 
 
-def get_dataloader():
+def get_dataloaders():
+    with open(config.dataset_path, "rb") as fp:
+        dataset_list = pickle.load(fp)
+    with open(config.lookup_table_path, "rb") as fp:
+        lookup_table = pickle.load(fp)
+    random.shuffle(dataset_list)
+    N = len(dataset_list)
+    test_size = int(N * config.train_test_split_ratio)
+    test_set = dataset_list[:test_size]
+    train_set = dataset_list[test_size:]
     return torch.utils.data.DataLoader(
-        MyDataset(),
+        MyDataset(dataset_list=train_set, lookup_table=lookup_table),
         batch_size=config.batch_size,
         shuffle=True,
+    ), torch.utils.data.DataLoader(
+        MyDataset(dataset_list=test_set, lookup_table=lookup_table),
+        batch_size=config.batch_size,
+        shuffle=False,
     )
-
-
-# def get_dataloader_task1():
-#     if not os.path.isfile(config.dataset_pkl_path):
-#         dataset = []
-#         with open(config.dataset_path, "r", encoding="utf-8") as fp:
-#             # MAX_SIZE = 10000
-#             for line in tqdm(fp, desc="加载数据集"):
-#                 # if MAX_SIZE <= 0: break
-#                 # MAX_SIZE -= 1
-#                 doc_i, pos_i, neg_i = map(int, line.strip().split())
-#                 doc = db.query_by_i(doc_i)
-#                 pos = db.query_by_i(pos_i)
-#                 neg = db.query_by_i(neg_i)
-#                 dataset.append(DataItemTask1(
-#                     doc_cite=len(doc["inCitations"]),
-#                     pos_cite=len(pos["inCitations"]),
-#                     neg_cite=len(neg["inCitations"]),
-#                     doc_title=doc["title"],
-#                     doc_abstract=doc["paperAbstract"],
-#                     pos_title=pos["title"],
-#                     pos_abstract=pos["paperAbstract"],
-#                     neg_title=neg["title"],
-#                     neg_abstract=neg["paperAbstract"],
-#                 ))
-#         with open(config.dataset_pkl_path, "wb") as fp:
-#             pickle.dump(dataset, fp)
-#     else:
-#         with open(config.dataset_pkl_path, "rb") as fp:
-#             dataset = pickle.load(fp)
-#     return torch.utils.data.DataLoader(
-#         dataset,
-#         batch_size=config.batch_size,
-#         shuffle=True,
-#     )
-#
-#
-# def build_dataset_task1():
-#     with open(config.dataset_path, "w", encoding="utf-8") as fp:
-#         paper_cnt = config.dataset_paper_cnt
-#         neg_cnt = config.negative_samples_per_pair
-#         for paper in tqdm(db.random_sample(paper_cnt, use_tqdm=True)):
-#             paper_id = paper["id"]
-#             paper_i = paper["i"]
-#             pos_ids = set(paper["outCitations"])
-#             neg_ids = []
-#             for i in range(neg_cnt):
-#                 while True:
-#                     neg_paper = db.random_sample(1)
-#                     neg_id = neg_paper[0]["id"]
-#                     if neg_id != paper_id and neg_id not in pos_ids:
-#                         break
-#                 neg_ids.append(neg_id)
-#             for pos_id in pos_ids:
-#                 try:
-#                     pos_i = db.query_by_id(pos_id)["i"]
-#                 except FileNotFoundError:
-#                     continue
-#                 for neg_id in neg_ids:
-#                     neg_i = db.query_by_id(neg_id)["i"]
-#                     fp.write(f"{paper_i}\t{pos_i}\t{neg_i}\n")
 
 
 def build_dataset(doc_cnt):
@@ -151,3 +109,5 @@ def build_dataset(doc_cnt):
 
 if __name__ == '__main__':
     build_dataset(doc_cnt=3000)
+    # x, y = get_dataloaders()
+    # print(x, y)

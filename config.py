@@ -15,3 +15,5 @@ use_db_cache = _yaml_obj["use_db_cache"]
 assert isinstance(use_db_cache, bool)
 dataset_path = _yaml_obj["dataset_path"]
 lookup_table_path = _yaml_obj["lookup_table_path"]
+train_test_split_ratio = _yaml_obj["train_test_split_ratio"]
+bert_hidden_size = _yaml_obj["bert_hidden_size"]
