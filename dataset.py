@@ -23,12 +23,12 @@ class MyDataset(torch.utils.data.Dataset):
             query_abstract=query_doc.abstract,
             query_venue=query_doc.venue,
             query_keywords=' '.join(query_doc.keywords),
-            query_in_cnt=query_doc.in_cnt,
+            query_in_cnt=float(query_doc.in_cnt),
             other_title=other_doc.title,
             other_abstract=other_doc.abstract,
             other_venue=other_doc.venue,
             other_keywords=' '.join(other_doc.keywords),
-            other_in_cnt=other_doc.in_cnt,
+            other_in_cnt=float(other_doc.in_cnt),
             target=float(sample.is_pos),
         )
 

@@ -109,8 +109,9 @@ def main():
             loss.backward()
             optimizer.step()
 
-            if step % 50 == 0:
+            if step % 100 == 0:
                 print(f"epoch: {epoch} step: {step} loss: {float(loss)}")
+            if step % 1000 == 0:
                 correct, total = test(model, test_loader)
                 print(f"test acc: {correct / total}")
             total_loss += float(loss)
