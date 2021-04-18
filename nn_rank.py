@@ -48,7 +48,7 @@ class NNRank(nn.Module):
         other_keywords_embed = self.bert_embedding(batch.other_keywords)
         keywords_similarity = torch.cosine_similarity(query_keywords_embed, other_keywords_embed, dim=1)
 
-        log_in_cnt = torch.max(torch.log(scalar(batch.other_in_cnt)), scalar(-1))
+        log_in_cnt = torch.max(torch.log(to_gpu(batch.other_in_cnt)), to_gpu(-1))
 
         concat = torch.stack(
             [title_similarity, abstract_similarity, venue_similarity, keywords_similarity, log_in_cnt],
@@ -63,7 +63,7 @@ class NNRank(nn.Module):
 
 
 def loss_fn(y_true, y_pred):
-    batch_loss = y_true * -torch.log(y_pred) + (scalar(1) - y_true) * -torch.log(scalar(1) - y_pred)
+    batch_loss = y_true * -torch.log(y_pred) + (to_gpu(1) - y_true) * -torch.log(to_gpu(1) - y_pred)
     return torch.mean(batch_loss)
 
 
@@ -83,7 +83,8 @@ def main():
         total_loss = 0.
         for step, batch in enumerate(train_loader):
             y_pred = model(batch)
-            loss = loss_fn(y_true=batch.target, y_pred=y_pred)
+            y_true = to_gpu(batch.target)
+            loss = loss_fn(y_true=y_true, y_pred=y_pred)
 
             optimizer.zero_grad()
             loss.backward()
