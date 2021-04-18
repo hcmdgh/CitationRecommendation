@@ -17,7 +17,9 @@ class Embedding(nn.Module):
     def __init__(self):
         super(Embedding, self).__init__()
         self.bert_tokenizer = BertTokenizer.from_pretrained('bert-base-uncased')
-        self.bert_model = BertModel.from_pretrained('bert-base-uncased')
+        bert_config = BertConfig(hidden_size=84)
+        # self.bert_model = BertModel.from_pretrained('bert-base-uncased')
+        self.bert_model = BertModel(bert_config)
         self.lambda_ = nn.Parameter(torch.randn(2))
 
     def forward(self, title_batch, abstract_batch):
@@ -53,8 +55,9 @@ def loss_fn(doc_embed, pos_embed, neg_embed, pos_cite, neg_cite):
 
 def main():
     train_loader = dataset.get_dataloader_task1()
-    print("len loader:", len(train_loader))
+    print("batch per epoch:", len(train_loader))
     model = to_gpu(Embedding())
+    print("total params:", sum(p.numel() for p in model.parameters() if p.requires_grad))
     optimizer = torch.optim.SGD(
         model.parameters(),
         lr=config.lr,
