@@ -6,7 +6,7 @@ corpus_size: 20314045
 
 max_token_len: 512
 use_db_cache: false
-train_test_split_ratio: 0.8
+test_set_ratio: 0.2
 seed: 1234
 
 # 模型超参数

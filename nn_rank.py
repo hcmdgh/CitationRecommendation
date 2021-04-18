@@ -87,7 +87,8 @@ def test(model, test_loader):
 
 def main():
     train_loader, test_loader = dataset.get_dataloaders()
-    print("batch per epoch:", len(train_loader))
+    print("len train_loader:", len(train_loader))
+    print("len test_loader:", len(test_loader))
     model = to_gpu(NNRank())
     print("total params:", sum(p.numel() for p in model.parameters() if p.requires_grad))
     optimizer = torch.optim.SGD(

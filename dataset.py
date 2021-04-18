@@ -43,7 +43,7 @@ def get_dataloaders():
         lookup_table = pickle.load(fp)
     random.shuffle(dataset_list)
     N = len(dataset_list)
-    test_size = int(N * config.train_test_split_ratio)
+    test_size = int(N * config.test_set_ratio)
     test_set = dataset_list[:test_size]
     train_set = dataset_list[test_size:]
     return torch.utils.data.DataLoader(
