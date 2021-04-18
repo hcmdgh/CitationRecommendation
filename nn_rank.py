@@ -2,6 +2,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 from transformers import BertTokenizer, BertModel, BertConfig
+from tqdm import tqdm
 
 import dataset
 from util import *
@@ -71,7 +72,7 @@ def test(model, test_loader):
     model.eval()
     correct = total = 0
     with torch.no_grad():
-        for batch in test_loader:
+        for batch in tqdm(test_loader, desc="testing"):
             y_pred = model(batch)
             y_true = to_gpu(batch.target)
             for i1, i2 in zip(y_true, y_pred):
