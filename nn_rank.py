@@ -87,10 +87,10 @@ def test(model, test_loader):
 
 def main():
     train_loader, test_loader = dataset.get_dataloaders()
-    print("len train_loader:", len(train_loader))
-    print("len test_loader:", len(test_loader))
+    print_plus("len train_loader:", len(train_loader))
+    print_plus("len test_loader:", len(test_loader))
     model = to_gpu(NNRank())
-    print("total params:", sum(p.numel() for p in model.parameters() if p.requires_grad))
+    print_plus("total params:", sum(p.numel() for p in model.parameters() if p.requires_grad))
     optimizer = torch.optim.SGD(
         model.parameters(),
         lr=config.lr,
@@ -100,6 +100,7 @@ def main():
     model.train()
     for epoch in range(config.epoch):
         total_loss = 0.
+        total_cnt = 0
         for step, batch in enumerate(train_loader):
             y_pred = model(batch)
             y_true = to_gpu(batch.target)
@@ -109,15 +110,15 @@ def main():
             loss.backward()
             optimizer.step()
 
+            total_loss += float(loss)
+            total_cnt += 1
             if step % 100 == 0:
-                print(f"epoch: {epoch} step: {step} loss: {float(loss)}")
+                print_plus(f"epoch: {epoch} step: {step} avg_loss: {total_loss / total_cnt}")
             if step % 1000 == 0:
                 correct, total = test(model, test_loader)
-                print(f"test acc: {correct / total}")
-            total_loss += float(loss)
+                print_plus(f"test acc: {correct / total}")
 
-        avg_loss = total_loss / len(train_loader)
-        print(f"epoch: {epoch} avg_loss: {avg_loss}")
+        print_plus(f"epoch: {epoch} avg_loss: {total_loss / total_cnt}")
 
 
 if __name__ == '__main__':

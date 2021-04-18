@@ -27,3 +27,11 @@ def to_gpu(x):
             x = x.float()
         return x.to(device=_device)
     return x.to(device=_device)
+
+
+_logging_fp = open("./output.log", "w", encoding="utf-8")
+
+
+def print_plus(*args, **kwargs):
+    print(*args, **kwargs, flush=True)
+    print(*args, **kwargs, file=_logging_fp, flush=True)
