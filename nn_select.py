@@ -74,9 +74,9 @@ def main():
             total_cnt += 1
             if step % 100 == 0:
                 print_plus(f"epoch: {epoch} step: {step} avg_loss: {total_loss / total_cnt}")
-            # if step % 1000 == 0:
-            #     test_avg_loss = test(model, test_loader)
-            #     print_plus(f"test acc: {test_avg_loss}")
+            if step % 1000 == 0:
+                test_avg_loss = test(model, test_loader)
+                print_plus(f"test acc: {test_avg_loss}")
 
         print_plus(f"epoch: {epoch} avg_loss: {total_loss / total_cnt}")
 
