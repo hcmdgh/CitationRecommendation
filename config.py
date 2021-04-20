@@ -18,3 +18,4 @@ test_set_ratio = _yaml_obj["test_set_ratio"]
 bert_hidden_size = _yaml_obj["bert_hidden_size"]
 use_gpu = _yaml_obj["use_gpu"]
 assert isinstance(use_gpu, bool)
+model_state_path = _yaml_obj["model_state_path"]

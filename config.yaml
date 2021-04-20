@@ -6,10 +6,11 @@ max_token_len: 512
 use_db_cache: false
 test_set_ratio: 0.2
 use_gpu: true
+model_state_path: ./data/model_state
 
 # 模型超参数
-epoch: 50
-batch_size: 16
+epoch: 100
+batch_size: 10
 bert_hidden_size: 84
 lr: 0.00002
 K: 5
