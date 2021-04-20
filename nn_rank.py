@@ -4,7 +4,7 @@ import torch.nn.functional as F
 from transformers import BertTokenizer, BertModel, BertConfig
 from tqdm import tqdm
 
-import dataset
+import dataset_old
 from util import *
 from bean import *
 import config
@@ -86,7 +86,7 @@ def test(model, test_loader):
 
 
 def main():
-    train_loader, test_loader = dataset.get_dataloaders()
+    train_loader, test_loader = dataset_old.get_dataloaders()
     print_plus("len train_loader:", len(train_loader))
     print_plus("len test_loader:", len(test_loader))
     model = to_gpu(NNRank())

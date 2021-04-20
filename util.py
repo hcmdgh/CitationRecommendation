@@ -1,8 +1,9 @@
 import config
 import torch
 
-_device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
-# _device = torch.device("cpu")
+_device = torch.device("cuda") \
+    if config.use_gpu and torch.cuda.is_available() \
+    else torch.device("cpu")
 
 
 def clip_tokens(batch_encoding):
