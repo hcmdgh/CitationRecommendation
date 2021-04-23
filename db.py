@@ -62,6 +62,13 @@ def random_sample_citations(cnt, use_tqdm=False):
     return citations
 
 
+def map_papers(func):
+    for paper in tqdm(_paper.find()):
+        new_paper = func(paper)
+        if new_paper:
+            _paper.save(new_paper)
+
+
 if __name__ == '__main__':
     res = random_sample(1000)
     print(res[:3])
