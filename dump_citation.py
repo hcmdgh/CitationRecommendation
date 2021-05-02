@@ -2,11 +2,11 @@ import pymongo
 from tqdm import tqdm
 
 conn = pymongo.MongoClient()
-paper_collection = conn.citation_recommendation.paper
+paper_collection = conn.citation_recommendation.sheared_paper
 citation_collection = conn.citation_recommendation.citation
-citation_collection.drop()
 
 idx = 0
+citation_collection.drop()
 for paper in tqdm(paper_collection.find()):
     citations = paper.get("citations", [])
     paper_id = paper["_id"]

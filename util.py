@@ -1,7 +1,7 @@
 import config
 import torch
 
-_device = torch.device("cuda") \
+device = torch.device("cuda") \
     if config.use_gpu and torch.cuda.is_available() \
     else torch.device("cpu")
 
@@ -22,12 +22,12 @@ def clip_tokens(batch_encoding):
 
 def to_gpu(x):
     if isinstance(x, int) or isinstance(x, float):
-        return torch.tensor(x, dtype=torch.float, device=_device)
+        return torch.tensor(x, dtype=torch.float, device=device)
     elif isinstance(x, torch.Tensor):
         if x.dtype == torch.double:
             x = x.float()
-        return x.to(device=_device)
-    return x.to(device=_device)
+        return x.to(device=device)
+    return x.to(device=device)
 
 
 _logging_fp = open("./output.log", "w", encoding="utf-8")

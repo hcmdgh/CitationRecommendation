@@ -4,7 +4,7 @@ import random
 from tqdm import tqdm
 
 _conn = pymongo.MongoClient()
-_paper = _conn.citation_recommendation.paper
+_paper = _conn.citation_recommendation.sheared_paper
 _citation = _conn.citation_recommendation.citation
 _cache_id = dict()
 _cache_i = dict()
@@ -23,15 +23,15 @@ def query_by_id(id_):
     return _cache_id[id_]
 
 
-# def query_by_i(i):
-#     if i not in _cache_i:
-#         paper = _paper.find_one({ "i": i })
-#         if paper is None:
-#             raise FileNotFoundError(f"未找到此i：{i}")
-#         if config.use_db_cache:
-#             _cache_i[i] = paper
-#         return paper
-#     return _cache_i[i]
+def query_by_i(i):
+    if i not in _cache_i:
+        paper = _paper.find_one({ "i": i })
+        if paper is None:
+            raise FileNotFoundError(f"未找到此i：{i}")
+        if config.use_db_cache:
+            _cache_i[i] = paper
+        return paper
+    return _cache_i[i]
 
 
 def random_sample(cnt, use_tqdm=False):
@@ -39,11 +39,11 @@ def random_sample(cnt, use_tqdm=False):
     visited = set()
     for _ in tqdm(range(cnt), desc="sampling") if use_tqdm else range(cnt):
         while True:
-            id_ = random.randrange(_paper_cnt)
-            if id_ not in visited:
-                visited.add(id_)
+            i = random.randrange(_paper_cnt)
+            if i not in visited:
+                visited.add(i)
                 break
-        paper = query_by_id(id_)
+        paper = query_by_i(i)
         papers.append(paper)
     return papers
 

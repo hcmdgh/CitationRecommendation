@@ -1,16 +1,21 @@
 # 数据集参数
-nn_select_dataset_path: ./data/nn_select_dataset_path.pkl
-nn_select_dataset_size: 60000
+nn_select_dataset_path: ./data/nn_select_dataset.pkl
+nn_select_dataset_size: 10000
 
 max_token_len: 512
-use_db_cache: false
+use_db_cache: true
+
+val_set_ratio: 0.2
 test_set_ratio: 0.2
+
+sep_token: "[TITLE-ABSTRACT]"
+
 use_gpu: true
 model_state_path: ./data/model_state
 
 # 模型超参数
 epoch: 100
-batch_size: 10
+batch_size: 16
 bert_hidden_size: 84
 lr: 0.00002
 K: 5
